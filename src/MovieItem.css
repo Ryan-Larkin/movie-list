@@ -1,0 +1,16 @@
+.movie-item {
+  margin-left:15px;
+  margin-right:15px;
+  margin-bottom:15px;
+
+  text-align:center;
+
+  border-bottom:2px solid black;
+}
+
+.movie-item > p {
+  font-family:Helvetica;
+  font-size:1.3em;
+  font-weight:bold;
+  max-width:200px;
+}
