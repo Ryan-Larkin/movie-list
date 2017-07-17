@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-
 import MovieItem from './MovieItem';
 
+import api from './api/api';
+
 const ENTER = 13;
+
+//TODO: turn the movies array from an array of names into an array of objects, potentially, need to use an id somehow for the remove
 
 class App extends Component {
   constructor() {
@@ -14,26 +17,28 @@ class App extends Component {
     }
   }
 
-  _handleTyping = (e) => {
+  handleTyping = (e) => {
     if (e.keyCode === ENTER) {
-      this._addMovie();
+      this.addMovie();
       this.refs.newMovie.value = "";
     }
   }
 
-  _addMovie = () => {
+  addMovie = () => {
     let { newMovie: {value: newMovie} } = this.refs;
 
-    this.setState({
-      movies: [...this.state.movies, newMovie]
-    });
-  }
+    // this.setState({
+    //   movies: [...this.state.movies, newMovie]
+    // });
 
-  _removeMovie = (index) => {
-    this.state.movies.splice(index, 1);
 
-    this.setState({
-      movies: this.state.movies
+    // TODO: rename addM here and in api/api to addMovie or something
+    api.addM(newMovie)
+    .then(res => {
+      console.log(res);
+      this.setState({
+        movies: [...this.state.movies, newMovie]
+      });
     });
   }
 
@@ -50,8 +55,8 @@ class App extends Component {
           <br />
 
           <div className="movie-input">
-            <input type="text" ref="newMovie" onKeyUp={this._handleTyping}/>
-            <button onClick={this._addMovie}>Add Movie</button>
+            <input type="text" ref="newMovie" onKeyUp={this.handleTyping}/>
+            <button onClick={this.addMovie}>Add Movie</button>
           </div>
 
           <hr />
