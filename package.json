@@ -9,6 +9,8 @@
     "mongoose": "^4.11.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-onclickoutside": "^6.4.0",
+    "reactjs-mappletooltip": "^1.4.63",
     "superagent": "^3.5.2"
   },
   "devDependencies": {

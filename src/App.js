@@ -6,8 +6,6 @@ import api from './api/api';
 
 const ENTER = 13;
 
-//TODO: turn the movies array from an array of names into an array of objects, potentially, need to use an id somehow for the remove
-
 class App extends Component {
   constructor() {
     super();
@@ -17,29 +15,39 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    this.fetchMovies();
+  }
+
+  fetchMovies = () => {
+    api.getMovies()
+    .then(res => {
+      let moviesList = res.body;
+      let moviesState = [];
+
+      Object.keys(moviesList).forEach(key => {
+        moviesState.push( {id : key, title : moviesList[key]} );
+      });
+
+      this.setState({
+        movies: moviesState
+      });
+    })
+    .catch(console.error);
+  }
+
   handleTyping = (e) => {
     if (e.keyCode === ENTER) {
-      this.addMovie();
+      this.addNewMovie();
       this.refs.newMovie.value = "";
     }
   }
 
-  addMovie = () => {
+  addNewMovie = () => {
     let { newMovie: {value: newMovie} } = this.refs;
 
-    // this.setState({
-    //   movies: [...this.state.movies, newMovie]
-    // });
-
-
-    // TODO: rename addM here and in api/api to addMovie or something
-    api.addM(newMovie)
-    .then(res => {
-      console.log(res);
-      this.setState({
-        movies: [...this.state.movies, newMovie]
-      });
-    });
+    api.addMovie(newMovie)
+    .then(this.fetchMovies);
   }
 
   render() {
@@ -56,7 +64,7 @@ class App extends Component {
 
           <div className="movie-input">
             <input type="text" ref="newMovie" onKeyUp={this.handleTyping}/>
-            <button onClick={this.addMovie}>Add Movie</button>
+            <button onClick={this.addNewMovie}>Add Movie</button>
           </div>
 
           <hr />
@@ -65,7 +73,10 @@ class App extends Component {
             {
               movies.map((m) => (
                 <MovieItem
-                  name={m}
+                  key={m.id}
+                  id={m.id}
+                  title={m.title}
+                  updateMovies={this.fetchMovies}
                 />
               ))
             }
